@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register | AI Nutrition Expert</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <style>
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background-image: url("/static/images/auth-bg.png.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* White card for login form */
+    .auth-card {
+        background: rgba(255, 255, 255, 0.94);
+        padding: 40px;
+        width: 380px;
+        border-radius: 16px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    }
+</style>
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-card">
+
+        <h2>Create Account</h2>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email address" required>
+
+            <div class="password-field">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <span class="toggle" onclick="togglePassword('password')">👁️</span>
+            </div>
+
+            <div class="password-field">
+                <input type="password" id="confirm" name="confirm" placeholder="Confirm password" required>
+                <span class="toggle" onclick="togglePassword('confirm')">👁️</span>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account?
+            <a href="{% url 'login' %}">Login</a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function togglePassword(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+}
+</script>
+
+</body>
+</html>

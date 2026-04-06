@@ -1,0 +1,595 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard | AI Nutrition Expert</title>
+   <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+    <style>
+        body {
+            background: #f5f8fb;
+        }
+
+        
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        }
+
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e0;
+        }
+
+        .chat-input button {
+            background: #38a169;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .goal {
+            color: #38a169;
+            font-weight: bold;
+        }
+        /* ===== NAVBAR FIX ===== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 74px;
+    padding: 0 40px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #38a169;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.nav-links a.active {
+    color: #38a169;
+    border-bottom: 2px solid #38a169;
+    padding-bottom: 4px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.goal {
+    font-size: 13px;
+    color: #38a169;
+}
+
+.logout-btn {
+    background: #38a169;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: background 0.25s ease;
+}
+
+.logout-btn:hover {
+    background: #2f855a;
+}
+
+/* NAVBAR POLISH */
+
+/* smooth transition for everything */
+.navbar a,
+.logo {
+    transition: all 0.25s ease;
+}
+
+/* hover effect on nav links */
+.nav-links a:hover {
+    color: #38a169;
+}
+
+/* animated underline */
+.nav-links a {
+    position: relative;
+}
+
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background: #38a169;
+    transition: width 0.25s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* active tab stronger underline */
+.nav-links a.active::after {
+    width: 100%;
+}
+
+/* logout button hover */
+
+
+/* logo subtle hover */
+.logo:hover {
+    opacity: 0.9;
+    cursor: pointer;
+}
+.nav-links a,
+.logout-btn {
+    cursor: pointer;
+}
+/* RIGHT SIDE PANEL */
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* PROFILE */
+.profile-section h3 {
+    margin-bottom: 15px;
+}
+
+.profile-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.profile-row span {
+    color: #718096;
+}
+
+.profile-row strong {
+    color: #2d3748;
+}
+
+.profile-row.goal strong {
+    color: #38a169;
+}
+
+/* DIVIDER */
+.divider {
+    height: 1px;
+    background: #e2e8f0;
+}
+
+/* ACTIONS */
+.actions-section h4 {
+    margin-bottom: 12px;
+}
+
+.action-card {
+    padding: 14px;
+    border-radius: 12px;
+    background: #f0fff4;
+    color: #2f855a;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+    margin-bottom: 10px;
+}
+
+.action-card:hover {
+    background: #c6f6d5;
+    transform: translateY(-2px);
+}
+
+.action-card.secondary {
+    background: #edf3ff;
+    color: #2d3748;
+}
+
+.action-card.secondary:hover {
+    background: #dbeafe;
+}
+/* TYPING INDICATOR */
+.typing-indicator {
+    font-size: 13px;
+    color: #718096;
+    margin: 8px 0 12px 8px;
+}
+
+.typing-indicator span {
+    animation: blink 1.4s infinite both;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0% { opacity: 0.2; }
+    20% { opacity: 1; }
+    100% { opacity: 0.2; }
+}
+.typing-indicator {
+    font-style: italic;
+    opacity: 0.8;
+}
+.ai-typing {
+    font-size: 13px;
+    color: #718096;
+    font-style: italic;
+    margin: 6px 0;
+}
+
+/* MESSAGE WRAPPER */
+.message-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.user-wrapper {
+    align-items: flex-end;
+}
+
+.ai-wrapper {
+    align-items: flex-start;
+}
+
+/* SENDER LABEL */
+.sender-label {
+    font-size: 12px;
+    color: #718096;
+    margin-bottom: 4px;
+}
+
+/* typing indicator style */
+.ai-typing {
+    font-style: italic;
+    opacity: 0.8;
+}
+/* TIMESTAMP */
+.timestamp {
+    font-size: 11px;
+    color: #a0aec0;
+    margin-top: 4px;
+}
+
+.user-wrapper .timestamp {
+    text-align: right;
+}
+
+.ai-wrapper .timestamp {
+    text-align: left;
+}
+
+.export-btn {
+    background: #38a169;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+body {
+    background-image: url("/static/images/auth-bg.png.png");
+    background-size: cover;          /* 🔥 MOST IMPORTANT */
+    background-position: center;     /* center the image */
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="navbar-left">
+        <div class="logo">
+            🥗 <span>AI Nutrition Expert</span>
+        </div>
+
+        <div class="nav-links">
+    <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
+    <a href="#">AI Chat</a>
+    <a href="#">Diet Plan</a>
+    <a href="#">Meals</a>
+    <a href="{% url 'profile' %}">Profile</a>
+</div>
+
+    </div>
+
+    <div class="navbar-right">
+        <div class="user-info">
+            <strong>{{ request.user.username }}</strong>
+            <span class="goal">{{ profile.get_goal_display }}</span>
+
+        </div>
+
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+
+<div class="dashboard-content">
+<!-- MAIN CONTENT -->
+<div class="container">
+
+    <!-- AI CHAT -->
+    <div class="card">
+        <h3>AI Nutrition Chat</h3>
+
+        <div class="chat-box" id="chatBox">
+            
+
+            <div class="message ai">
+        Hi, I’m <strong>WellnessAI</strong> 👋 Ask me anything about your diet 🥗
+    </div>
+            
+
+        </div>
+
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Ask about food, calories, diet..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- USER SUMMARY -->
+    <!-- RIGHT PANEL -->
+<div class="card side-panel">
+
+    <!-- PROFILE SECTION -->
+    <div class="profile-section">
+        <h3>Your Profile</h3>
+
+        <div class="profile-row">
+            <span>Age</span>
+            <strong>{{ profile.age }}</strong>
+        </div>
+
+        <div class="profile-row">
+            <span>Height</span>
+            <strong>{{ profile.height }} cm</strong>
+        </div>
+
+        <div class="profile-row">
+            <span>Weight</span>
+            <strong>{{ profile.weight }} kg</strong>
+        </div>
+
+        <div class="profile-row goal">
+            <span>Goal</span>
+            <strong>{{ profile.get_goal_display }}</strong>
+        </div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="divider"></div>
+
+    <!-- ACTIONS SECTION -->
+    <div class="actions-section">
+        <h4>Main Actions</h4>
+
+       <div class="action-card" onclick="generateDietPlan()">
+    🥗 Generate AI Diet Plan
+</div>
+    <div class="action-card" onclick="window.location.href='{% url 'export_diet_pdf' %}'">
+    📄 Download Diet Plan
+</div>
+
+
+
+        <div class="action-card">
+            🍽 Analyze Today’s Meal
+        </div>
+
+        <div class="action-card secondary">
+            🧠 Healthy Alternatives
+        </div>
+    </div>
+
+</div>
+
+
+</div>
+</div>
+<script>
+function getCurrentTime() {
+    const now = new Date();
+    return now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+</script>
+<script>
+function sendMessage() {
+    const input = document.getElementById("userInput");
+    const chatBox = document.getElementById("chatBox");
+    const sendBtn = document.querySelector(".chat-input button");
+
+    const message = input.value.trim();
+    if (!message) return;
+
+    // User message
+    const userWrapper = document.createElement("div");
+userWrapper.className = "message-wrapper user-wrapper";
+
+userWrapper.innerHTML = `
+    <div class="sender-label">You</div>
+    <div class="message user">${message}</div>
+    <div class="timestamp">${getCurrentTime()}</div>
+`;
+
+
+chatBox.appendChild(userWrapper);
+
+
+    input.value = "";
+    sendBtn.disabled = true;
+
+    // Typing indicator (CREATED dynamically)
+    const typingMsg = document.createElement("div");
+typingMsg.className = "message-wrapper ai-wrapper";
+typingMsg.id = "aiTyping";
+
+typingMsg.innerHTML = `
+    <div class="sender-label">WellnessAI</div>
+    <div class="message ai ai-typing">WellnessAI is typing...</div>
+`;
+
+chatBox.appendChild(typingMsg);
+
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    fetch("/ai-chat/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "message=" + encodeURIComponent(message)
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Remove typing indicator
+        document.getElementById("aiTyping")?.remove();
+
+        // AI response
+       const aiWrapper = document.createElement("div");
+aiWrapper.className = "message-wrapper ai-wrapper";
+
+aiWrapper.innerHTML = `
+    <div class="sender-label">WellnessAI</div>
+    <div class="message ai">${data.reply}</div>
+    <div class="timestamp">${getCurrentTime()}</div>
+`;
+
+
+chatBox.appendChild(aiWrapper);
+
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+        sendBtn.disabled = false;
+    })
+    .catch(() => {
+        document.getElementById("aiTyping")?.remove();
+        sendBtn.disabled = false;
+    });
+}
+function generateDietPlan() {
+    const chatBox = document.getElementById("chatBox");
+
+    // Show user action
+    chatBox.innerHTML += `
+        <p><strong>You:</strong> Generate a diet plan for me</p>
+    `;
+
+    // Show typing indicator
+    chatBox.innerHTML += `
+        <p id="typing"><em>WellnessAI is preparing your diet plan...</em></p>
+    `;
+
+    fetch("/ai-chat/", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "message=" + encodeURIComponent(
+            "Generate a complete daily diet plan based on my profile."
+        )
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("typing").remove();
+
+        chatBox.innerHTML += `
+            <p><strong>WellnessAI:</strong><br>${data.reply.replace(/\n/g, "<br>")}</p>
+        `;
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+}
+</script>
+
+
+<script>
+document.getElementById("userInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #f7fafc;
+    color: #2d3748;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #38a169;
+}
+
+.nav-buttons a {
+    margin-left: 15px;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.login-btn {
+    color: #38a169;
+}
+
+.register-btn {
+    background: #38a169;
+    color: white;
+}
+
+/* Hero section */
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px;
+}
+
+.hero-text {
+    max-width: 500px;
+}
+
+.hero-text h1 {
+    font-size: 42px;
+    margin-bottom: 20px;
+}
+
+.hero-text p {
+    font-size: 18px;
+    color: #4a5568;
+    margin-bottom: 30px;
+}
+
+.hero-text .cta {
+    padding: 14px 30px;
+    background: #38a169;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.hero-image {
+    width: 420px;
+}
+
+/* Features */
+.features {
+    padding: 60px 80px;
+    background: white;
+}
+
+.features h2 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.feature-card {
+    padding: 30px;
+    border-radius: 12px;
+    background: #f7fafc;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.feature-card h3 {
+    margin-bottom: 10px;
+    color: #38a169;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #718096;
+}
+/* DASHBOARD NAVBAR */
+/* NAVBAR */
+.navbar {
+    height: 70px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* LEFT SIDE */
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #38a169;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #4a5568;
+    font-weight: 500;
+    padding-bottom: 4px;
+}
+
+.nav-links a.active {
+    color: #38a169;
+    border-bottom: 2px solid #38a169;
+}
+
+/* RIGHT SIDE */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.user-info .goal {
+    font-size: 13px;
+    color: #38a169;
+}
+
+.logout-btn {
+    background: #edf3ff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #2d3748;
+    font-weight: 500;
+}
+
+.dashboard-content {
+    padding: 30px 40px;
+}

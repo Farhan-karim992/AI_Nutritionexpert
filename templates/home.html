@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Nutrition Expert</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">🥗 AI Nutrition Expert</div>
+    <div class="nav-buttons">
+        <a href="{% url 'login' %}" class="login-btn">Login</a>
+        <a href="{% url 'register' %}" class="register-btn">Get Started</a>
+    </div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-text">
+        <h1>Eat Smart. Live Healthy.</h1>
+        <p>
+            AI Nutrition Expert helps you track meals, analyze nutrition,
+            generate personalized diet plans, and suggest healthier alternatives
+            using artificial intelligence.
+        </p>
+        <a href="{% url 'register' %}" class="cta">Start Your Journey</a>
+    </div>
+
+    <img class="hero-image"
+         src="https://images.unsplash.com/photo-1498837167922-ddd27525d352"
+         alt="Healthy food">
+</section>
+
+<!-- Features -->
+<section class="features">
+    <h2>Why Choose AI Nutrition Expert?</h2>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h3>Personalized Diet Plans</h3>
+            <p>Custom diet plans based on your age, weight, height, and goals.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Meal Analysis</h3>
+            <p>Analyze your daily meals and get instant nutrition insights.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Healthy Alternatives</h3>
+            <p>AI suggests smarter food options to improve your health.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<div class="footer">
+    © 2026 AI Nutrition Expert. All rights reserved.
+</div>
+
+</body>
+</html>
