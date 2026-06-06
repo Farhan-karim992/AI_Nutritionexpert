@@ -1,0 +1,55 @@
+<h1>Food Analysis</h1>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <input
+        type="text"
+        name="food"
+        placeholder="Enter food name"
+    >
+
+    <button type="submit">
+        Analyze
+    </button>
+
+</form>
+
+{% if food_result %}
+
+    {% if food_result.error %}
+
+        <p>{{ food_result.error }}</p>
+
+    {% else %}
+
+        <h2>{{ food_result.food }}</h2>
+
+        <p>
+            Calories:
+            {{ food_result.calories }}
+        </p>
+
+        <p>
+            Protein:
+            {{ food_result.protein }}
+        </p>
+
+        <p>
+            Fat:
+            {{ food_result.fat }}
+        </p>
+
+        <p>
+            Carbs:
+            {{ food_result.carbs }}
+        </p>
+
+        <h3>
+            {{ food_result.recommendation }}
+        </h3>
+
+    {% endif %}
+
+{% endif %}

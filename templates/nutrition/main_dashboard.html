@@ -1,595 +1,740 @@
-{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard | AI Nutrition Expert</title>
-   <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+
+    <title>WellnessAI Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        body {
-            background: #f5f8fb;
+
+        *{
+            box-sizing:border-box;
         }
 
-        
+        body{
 
-        .container {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-            padding: 40px;
+            margin:0;
+
+            padding:0;
+
+            font-family:'Segoe UI',sans-serif;
+
+            background:#eef2f7;
+
+            color:#1e293b;
         }
 
-        .card {
-            background: white;
-            border-radius: 14px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        .container{
+
+            width:92%;
+
+            max-width:1450px;
+
+            margin:auto;
+
+            padding:35px 0;
         }
 
-        .chat-box {
-            height: 400px;
-            overflow-y: auto;
-            border: 1px solid #e2e8f0;
-            padding: 15px;
-            margin-bottom: 15px;
+        /* NAVBAR */
+
+        .navbar{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            background:white;
+
+            padding:22px 35px;
+
+            border-radius:24px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.06);
+
+            margin-bottom:35px;
         }
 
-        .chat-input {
-            display: flex;
-            gap: 10px;
+        .logo-section{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:18px;
         }
 
-        .chat-input input {
-            flex: 1;
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid #cbd5e0;
+        .logo{
+
+            width:65px;
+
+            height:65px;
+
+            border-radius:18px;
+
+            background:linear-gradient(
+                135deg,
+                #2563eb,
+                #7c3aed
+            );
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            font-size:32px;
+
+            color:white;
         }
 
-        .chat-input button {
-            background: #38a169;
-            color: white;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 10px;
-            cursor: pointer;
+        .brand-name{
+
+            font-size:30px;
+
+            font-weight:700;
+
+            color:#0f172a;
         }
 
-        .goal {
-            color: #38a169;
-            font-weight: bold;
+        .brand-sub{
+
+            color:#64748b;
+
+            margin-top:4px;
         }
-        /* ===== NAVBAR FIX ===== */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 74px;
-    padding: 0 40px;
-    background: #ffffff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-}
 
-.navbar-left {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-}
+        .nav-right{
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 20px;
-    font-weight: 700;
-    color: #38a169;
-}
+            display:flex;
 
-.nav-links {
-    display: flex;
-    gap: 25px;
-}
+            align-items:center;
 
-.nav-links a {
-    text-decoration: none;
-    color: #4a5568;
-    font-weight: 500;
-}
+            gap:20px;
+        }
 
-.nav-links a.active {
-    color: #38a169;
-    border-bottom: 2px solid #38a169;
-    padding-bottom: 4px;
-}
+        .user-info{
 
-.navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-}
+            text-align:right;
+        }
 
-.user-info {
-    display: flex;
-    flex-direction: column;
-    text-align: right;
-}
+        .welcome{
 
-.goal {
-    font-size: 13px;
-    color: #38a169;
-}
+            font-size:22px;
 
-.logout-btn {
-    background: #38a169;
-    padding: 8px 16px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: white;
-    font-weight: 600;
-    transition: background 0.25s ease;
-}
+            font-weight:600;
 
-.logout-btn:hover {
-    background: #2f855a;
-}
+            color:#0f172a;
+        }
 
-/* NAVBAR POLISH */
+        .goal{
 
-/* smooth transition for everything */
-.navbar a,
-.logo {
-    transition: all 0.25s ease;
-}
+            margin-top:6px;
 
-/* hover effect on nav links */
-.nav-links a:hover {
-    color: #38a169;
-}
+            color:#64748b;
 
-/* animated underline */
-.nav-links a {
-    position: relative;
-}
+            font-size:16px;
+        }
 
-.nav-links a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 0%;
-    height: 2px;
-    background: #38a169;
-    transition: width 0.25s ease;
-}
+        .nav-logout{
 
-.nav-links a:hover::after {
-    width: 100%;
-}
+            background:#ef4444;
 
-/* active tab stronger underline */
-.nav-links a.active::after {
-    width: 100%;
-}
+            color:white;
 
-/* logout button hover */
+            text-decoration:none;
 
+            padding:12px 22px;
 
-/* logo subtle hover */
-.logo:hover {
-    opacity: 0.9;
-    cursor: pointer;
-}
-.nav-links a,
-.logout-btn {
-    cursor: pointer;
-}
-/* RIGHT SIDE PANEL */
-.side-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
+            border-radius:12px;
 
-/* PROFILE */
-.profile-section h3 {
-    margin-bottom: 15px;
-}
+            font-weight:600;
 
-.profile-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    font-size: 14px;
-}
+            transition:0.3s;
+        }
 
-.profile-row span {
-    color: #718096;
-}
+        .nav-logout:hover{
 
-.profile-row strong {
-    color: #2d3748;
-}
+            background:#dc2626;
 
-.profile-row.goal strong {
-    color: #38a169;
-}
+            transform:translateY(-2px);
+        }
 
-/* DIVIDER */
-.divider {
-    height: 1px;
-    background: #e2e8f0;
-}
+        /* STATS */
 
-/* ACTIONS */
-.actions-section h4 {
-    margin-bottom: 12px;
-}
+        .cards{
 
-.action-card {
-    padding: 14px;
-    border-radius: 12px;
-    background: #f0fff4;
-    color: #2f855a;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.2s ease;
-    margin-bottom: 10px;
-}
+            display:grid;
 
-.action-card:hover {
-    background: #c6f6d5;
-    transform: translateY(-2px);
-}
+            grid-template-columns:
+                repeat(auto-fit,minmax(250px,1fr));
 
-.action-card.secondary {
-    background: #edf3ff;
-    color: #2d3748;
-}
+            gap:25px;
+        }
 
-.action-card.secondary:hover {
-    background: #dbeafe;
-}
-/* TYPING INDICATOR */
-.typing-indicator {
-    font-size: 13px;
-    color: #718096;
-    margin: 8px 0 12px 8px;
-}
+        .card{
 
-.typing-indicator span {
-    animation: blink 1.4s infinite both;
-}
+            background:white;
 
-.typing-indicator span:nth-child(2) {
-    animation-delay: 0.2s;
-}
+            padding:35px;
 
-.typing-indicator span:nth-child(3) {
-    animation-delay: 0.4s;
-}
+            border-radius:24px;
 
-@keyframes blink {
-    0% { opacity: 0.2; }
-    20% { opacity: 1; }
-    100% { opacity: 0.2; }
-}
-.typing-indicator {
-    font-style: italic;
-    opacity: 0.8;
-}
-.ai-typing {
-    font-size: 13px;
-    color: #718096;
-    font-style: italic;
-    margin: 6px 0;
-}
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.06);
 
-/* MESSAGE WRAPPER */
-.message-wrapper {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-}
+            text-align:center;
 
-.user-wrapper {
-    align-items: flex-end;
-}
+            transition:0.3s;
+        }
 
-.ai-wrapper {
-    align-items: flex-start;
-}
+        .card:hover{
 
-/* SENDER LABEL */
-.sender-label {
-    font-size: 12px;
-    color: #718096;
-    margin-bottom: 4px;
-}
+            transform:translateY(-5px);
 
-/* typing indicator style */
-.ai-typing {
-    font-style: italic;
-    opacity: 0.8;
-}
-/* TIMESTAMP */
-.timestamp {
-    font-size: 11px;
-    color: #a0aec0;
-    margin-top: 4px;
-}
+            box-shadow:
+                0 14px 35px rgba(0,0,0,0.08);
+        }
 
-.user-wrapper .timestamp {
-    text-align: right;
-}
+        .card h2{
 
-.ai-wrapper .timestamp {
-    text-align: left;
-}
+            margin:0;
 
-.export-btn {
-    background: #38a169;
-    color: white;
-    border: none;
-    padding: 10px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-body {
-    background-image: url("/static/images/auth-bg.png.png");
-    background-size: cover;          /* 🔥 MOST IMPORTANT */
-    background-position: center;     /* center the image */
-    background-repeat: no-repeat;
-    min-height: 100vh;
-}
+            font-size:30px;
 
+            color:#0f172a;
+        }
+
+        .card p{
+
+            margin-top:20px;
+
+            font-size:26px;
+
+            font-weight:700;
+
+            color:#2563eb;
+        }
+
+        /* ACTIONS */
+
+        .actions{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(auto-fit,minmax(250px,1fr));
+
+            gap:25px;
+
+            margin-top:35px;
+        }
+
+        .btn{
+
+            background:white;
+
+            border-radius:24px;
+
+            padding:30px;
+
+            text-decoration:none;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.06);
+
+            transition:0.3s;
+
+            min-height:220px;
+
+            display:flex;
+
+            flex-direction:column;
+
+            justify-content:center;
+        }
+
+        .btn:hover{
+
+            transform:translateY(-6px);
+
+            box-shadow:
+                0 14px 35px rgba(0,0,0,0.1);
+        }
+
+        .btn-icon{
+
+            font-size:52px;
+
+            margin-bottom:18px;
+        }
+
+        .btn h2{
+
+            margin:0;
+
+            font-size:28px;
+
+            color:#0f172a;
+        }
+
+        .btn p{
+
+            margin-top:15px;
+
+            color:#64748b;
+
+            line-height:1.7;
+
+            font-size:16px;
+        }
+
+        .green-card{
+            border-left:8px solid #22c55e;
+        }
+
+        .blue-card{
+            border-left:8px solid #2563eb;
+        }
+
+        .purple-card{
+            border-left:8px solid #7c3aed;
+        }
+
+        .orange-card{
+            border-left:8px solid #f97316;
+        }
+
+        /* SUMMARY */
+
+        .summary{
+
+            margin-top:35px;
+
+            background:white;
+
+            padding:35px;
+
+            border-radius:24px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.06);
+        }
+
+        .summary h2{
+
+            margin-top:0;
+
+            font-size:34px;
+
+            color:#0f172a;
+        }
+
+        .summary p,
+        .summary li{
+
+            font-size:18px;
+
+            color:#475569;
+
+            line-height:1.8;
+        }
+
+        .summary ul{
+            padding-left:25px;
+        }
+
+        /* ANALYTICS */
+
+        .analytics-grid{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(auto-fit,minmax(300px,1fr));
+
+            gap:25px;
+
+            margin-top:35px;
+        }
+
+        .analytics-card{
+
+            background:white;
+
+            padding:35px;
+
+            border-radius:24px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.06);
+        }
+
+        .analytics-card h2{
+
+            margin-top:0;
+
+            font-size:32px;
+        }
+
+        .analytics-card h3{
+
+            margin-top:25px;
+
+            font-size:22px;
+
+            color:#334155;
+        }
+
+        /* CHART */
+
+        .chart-section{
+
+            margin-top:35px;
+
+            background:white;
+
+            padding:35px;
+
+            border-radius:24px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.06);
+        }
+
+        .chart-section h2{
+
+            margin-top:0;
+
+            font-size:32px;
+        }
 
     </style>
+
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-    <div class="navbar-left">
-        <div class="logo">
-            🥗 <span>AI Nutrition Expert</span>
-        </div>
-
-        <div class="nav-links">
-    <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
-    <a href="#">AI Chat</a>
-    <a href="#">Diet Plan</a>
-    <a href="#">Meals</a>
-    <a href="{% url 'profile' %}">Profile</a>
-</div>
-
-    </div>
-
-    <div class="navbar-right">
-        <div class="user-info">
-            <strong>{{ request.user.username }}</strong>
-            <span class="goal">{{ profile.get_goal_display }}</span>
-
-        </div>
-
-        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
-    </div>
-</div>
-
-
-<div class="dashboard-content">
-<!-- MAIN CONTENT -->
 <div class="container">
 
-    <!-- AI CHAT -->
-    <div class="card">
-        <h3>AI Nutrition Chat</h3>
+    <!-- NAVBAR -->
 
-        <div class="chat-box" id="chatBox">
-            
+    <div class="navbar">
 
-            <div class="message ai">
-        Hi, I’m <strong>WellnessAI</strong> 👋 Ask me anything about your diet 🥗
-    </div>
-            
+        <div class="logo-section">
+
+            <div class="logo">
+                🧠
+            </div>
+
+            <div>
+
+                <div class="brand-name">
+                    WellnessAI
+                </div>
+
+                <div class="brand-sub">
+                    AI Nutrition Platform
+                </div>
+
+            </div>
 
         </div>
 
-        <div class="chat-input">
-            <input type="text" id="userInput" placeholder="Ask about food, calories, diet..." />
-            <button onclick="sendMessage()">Send</button>
-        </div>
-    </div>
+        <div class="nav-right">
 
-    <!-- USER SUMMARY -->
-    <!-- RIGHT PANEL -->
-<div class="card side-panel">
+            <div class="user-info">
 
-    <!-- PROFILE SECTION -->
-    <div class="profile-section">
-        <h3>Your Profile</h3>
+                <div class="welcome">
+                    Welcome,
+                    {{ request.user.username }}
+                </div>
 
-        <div class="profile-row">
-            <span>Age</span>
-            <strong>{{ profile.age }}</strong>
-        </div>
+                <div class="goal">
+                    Goal:
+                    {{ profile.get_goal_display }}
+                </div>
 
-        <div class="profile-row">
-            <span>Height</span>
-            <strong>{{ profile.height }} cm</strong>
-        </div>
+            </div>
 
-        <div class="profile-row">
-            <span>Weight</span>
-            <strong>{{ profile.weight }} kg</strong>
+            <a
+                href="/logout/"
+                class="nav-logout"
+            >
+                Logout
+            </a>
+
         </div>
 
-        <div class="profile-row goal">
-            <span>Goal</span>
-            <strong>{{ profile.get_goal_display }}</strong>
-        </div>
-    </div>
-
-    <!-- DIVIDER -->
-    <div class="divider"></div>
-
-    <!-- ACTIONS SECTION -->
-    <div class="actions-section">
-        <h4>Main Actions</h4>
-
-       <div class="action-card" onclick="generateDietPlan()">
-    🥗 Generate AI Diet Plan
-</div>
-    <div class="action-card" onclick="window.location.href='{% url 'export_diet_pdf' %}'">
-    📄 Download Diet Plan
-</div>
-
-
-
-        <div class="action-card">
-            🍽 Analyze Today’s Meal
-        </div>
-
-        <div class="action-card secondary">
-            🧠 Healthy Alternatives
-        </div>
     </div>
 
+    <!-- STATS -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h2>Age</h2>
+
+            <p>{{ profile.age }}</p>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Height</h2>
+
+            <p>{{ profile.height }} cm</p>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Weight</h2>
+
+            <p>{{ profile.weight }} kg</p>
+
+        </div>
+
+        <div class="card">
+
+            <h2>BMI</h2>
+
+            <p>{{ bmi }}</p>
+
+        </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+
+    <div class="actions">
+
+        <a
+            href="/profile/"
+            class="btn green-card"
+        >
+
+            <div class="btn-icon">
+                👤
+            </div>
+
+            <h2>Edit Profile</h2>
+
+            <p>
+                Update your health and body information.
+            </p>
+
+        </a>
+
+        <a
+            href="/diet-plan/"
+            class="btn blue-card"
+        >
+
+            <div class="btn-icon">
+                🥗
+            </div>
+
+            <h2>AI Diet Plan</h2>
+
+            <p>
+                Personalized ML-powered meal recommendations.
+            </p>
+
+        </a>
+
+        <a
+            href="{% url 'nutrition_chatbot' %}"
+            class="btn purple-card"
+        >
+
+            <div class="btn-icon">
+                🤖
+            </div>
+
+            <h2>Nutrition AI Chatbot</h2>
+
+            <p>
+                Analyze meals and receive intelligent nutrition advice.
+            </p>
+
+        </a>
+
+        <a
+            href="/export-diet-pdf/"
+            class="btn orange-card"
+        >
+
+            <div class="btn-icon">
+                📄
+            </div>
+
+            <h2>Export PDF</h2>
+
+            <p>
+                Download your nutrition report instantly.
+            </p>
+
+        </a>
+
+    </div>
+
+    <!-- AI SYSTEM -->
+
+    <div class="summary">
+
+        <h2>
+            AI Nutrition System
+        </h2>
+
+        <p>
+
+            WellnessAI combines machine learning,
+            nutrition analytics, and conversational AI
+            to provide intelligent health recommendations.
+
+        </p>
+
+        <ul>
+
+            <li>
+                Machine Learning Recommendation System
+            </li>
+
+            <li>
+                Personalized Diet Intelligence
+            </li>
+
+            <li>
+                Nutrition Analytics Dashboard
+            </li>
+
+            <li>
+                Conversational AI Meal Analysis
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- ANALYTICS -->
+
+    <div class="analytics-grid">
+
+        <div class="analytics-card">
+
+            <h2>
+                Health Analytics
+            </h2>
+
+            <h3>
+                BMI:
+                {{ bmi }}
+            </h3>
+
+            <h3>
+                Status:
+                {{ bmi_status }}
+            </h3>
+
+            <h3>
+                Health Score:
+                {{ health_score }}/100
+            </h3>
+
+        </div>
+
+    </div>
+
+    <!-- CHART -->
+
+    <div class="chart-section">
+
+        <h2>
+            Nutrition Analytics
+        </h2>
+
+        <canvas id="nutritionChart"></canvas>
+
+    </div>
+
 </div>
 
-
-</div>
-</div>
 <script>
-function getCurrentTime() {
-    const now = new Date();
-    return now.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-}
-</script>
-<script>
-function sendMessage() {
-    const input = document.getElementById("userInput");
-    const chatBox = document.getElementById("chatBox");
-    const sendBtn = document.querySelector(".chat-input button");
 
-    const message = input.value.trim();
-    if (!message) return;
+const ctx = document.getElementById(
+    'nutritionChart'
+);
 
-    // User message
-    const userWrapper = document.createElement("div");
-userWrapper.className = "message-wrapper user-wrapper";
+new Chart(ctx, {
 
-userWrapper.innerHTML = `
-    <div class="sender-label">You</div>
-    <div class="message user">${message}</div>
-    <div class="timestamp">${getCurrentTime()}</div>
-`;
+    type: 'bar',
 
+    data: {
 
-chatBox.appendChild(userWrapper);
+        labels: [
+            'Calories',
+            'Protein',
+            'Fats',
+            'Carbs'
+        ],
 
+        datasets: [{
 
-    input.value = "";
-    sendBtn.disabled = true;
+            label: 'Nutrition Values',
 
-    // Typing indicator (CREATED dynamically)
-    const typingMsg = document.createElement("div");
-typingMsg.className = "message-wrapper ai-wrapper";
-typingMsg.id = "aiTyping";
+            data: [
 
-typingMsg.innerHTML = `
-    <div class="sender-label">WellnessAI</div>
-    <div class="message ai ai-typing">WellnessAI is typing...</div>
-`;
+                {{ nutrition_data.calories }},
+                {{ nutrition_data.protein }},
+                {{ nutrition_data.fats }},
+                {{ nutrition_data.carbs }}
 
-chatBox.appendChild(typingMsg);
+            ],
 
+            backgroundColor: [
+                '#2563eb',
+                '#22c55e',
+                '#f97316',
+                '#7c3aed'
+            ],
 
-    chatBox.scrollTop = chatBox.scrollHeight;
+            borderRadius: 12
+        }]
+    },
 
-    fetch("/ai-chat/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                labels: {
+
+                    font: {
+                        size: 15
+                    }
+                }
+            }
         },
-        body: "message=" + encodeURIComponent(message)
-    })
-    .then(res => res.json())
-    .then(data => {
-        // Remove typing indicator
-        document.getElementById("aiTyping")?.remove();
 
-        // AI response
-       const aiWrapper = document.createElement("div");
-aiWrapper.className = "message-wrapper ai-wrapper";
+        scales: {
 
-aiWrapper.innerHTML = `
-    <div class="sender-label">WellnessAI</div>
-    <div class="message ai">${data.reply}</div>
-    <div class="timestamp">${getCurrentTime()}</div>
-`;
-
-
-chatBox.appendChild(aiWrapper);
-
-
-        chatBox.scrollTop = chatBox.scrollHeight;
-        sendBtn.disabled = false;
-    })
-    .catch(() => {
-        document.getElementById("aiTyping")?.remove();
-        sendBtn.disabled = false;
-    });
-}
-function generateDietPlan() {
-    const chatBox = document.getElementById("chatBox");
-
-    // Show user action
-    chatBox.innerHTML += `
-        <p><strong>You:</strong> Generate a diet plan for me</p>
-    `;
-
-    // Show typing indicator
-    chatBox.innerHTML += `
-        <p id="typing"><em>WellnessAI is preparing your diet plan...</em></p>
-    `;
-
-    fetch("/ai-chat/", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "message=" + encodeURIComponent(
-            "Generate a complete daily diet plan based on my profile."
-        )
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById("typing").remove();
-
-        chatBox.innerHTML += `
-            <p><strong>WellnessAI:</strong><br>${data.reply.replace(/\n/g, "<br>")}</p>
-        `;
-
-        chatBox.scrollTop = chatBox.scrollHeight;
-    });
-}
-</script>
-
-
-<script>
-document.getElementById("userInput").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        sendMessage();
+            y: {
+                beginAtZero: true
+            }
+        }
     }
 });
+
 </script>
-
-
 
 </body>
 </html>
