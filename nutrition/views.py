@@ -4,7 +4,6 @@ from .models import Profile
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from google import genai
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
@@ -19,7 +18,7 @@ import numpy as np
 from .food_engine import analyze_food
 from .chatbot_engine import analyze_sentence
 
-client = genai.Client(api_key="AIzaSyCZaUNiAi6KZJMRXb4FUwMnW7ZrAd-6m0c")
+
 model = joblib.load("nutrition_model.pkl")
 @login_required
 def ml_predict(request):
