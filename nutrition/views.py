@@ -463,10 +463,12 @@ def diet_plan(request):
         )[0]
     )
     breakfast = breakfast.replace("_", ", ").title()
-
     lunch = lunch.replace("_", ", ").title()
-
     dinner = dinner.replace("_", ", ").title()
+
+    request.session["breakfast"] = breakfast
+    request.session["lunch"] = lunch
+    request.session["dinner"] = dinner
     return render(
         request,
         "nutrition/diet_plan.html",
@@ -548,164 +550,263 @@ Fats: {fats} g
     return HttpResponse(result)
 @login_required
 def export_diet_pdf(request):
-    diet_plan = request.session.get("latest_diet_plan")
-    if not diet_plan:
-        return HttpResponse("No diet plan available.")
-    # ================= EXTRACT NUTRITION SUMMARY =================
-    calories = "N/A"
-    protein = "N/A"
-    fats = "N/A"
 
-    cal_match = re.search(r"(\d{3,4})\s*kcal", diet_plan, re.IGNORECASE)
-    prot_match = re.search(r"(\d{2,3})\s*g\s*protein", diet_plan, re.IGNORECASE)
-    fat_match = re.search(r"(\d{2,3})\s*g\s*fat", diet_plan, re.IGNORECASE)
-
-    if cal_match:
-     calories = cal_match.group(1)
-
-    if prot_match:
-     protein = prot_match.group(1)
-
-    if fat_match:
-     fats = fat_match.group(1)
-
-
-
-    
-
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = 'attachment; filename="WellnessAI_Nutrition_Plan.pdf"'
-
-    c = canvas.Canvas(response, pagesize=A4)
-    width, height = A4
-
-    # 🎨 Colors
-    primary = HexColor("#2f855a")
-    dark = HexColor("#1a202c")
-    muted = HexColor("#718096")
-
-    y = height - 60
-
-    # ================= HEADER =================
-    c.setFont("Helvetica-Bold", 26)
-    c.setFillColor(primary)
-    c.drawString(50, y, "WellnessAI")
-    y -= 28
-
-    c.setFont("Helvetica", 13)
-    c.setFillColor(dark)
-    c.drawString(50, y, "Personalized Nutrition & Diet Plan")
-    y -= 20
-
-    c.setFont("Helvetica", 10)
-    c.setFillColor(muted)
-    c.drawString(50, y, f"Generated on: {datetime.now().strftime('%d %B %Y')}")
-    y -= 25
-
-    c.line(50, y, width - 50, y)
-    y -= 30
-
-    # ================= CLIENT PROFILE =================
     profile = Profile.objects.filter(user=request.user).first()
 
-    c.setFont("Helvetica-Bold", 14)
+    if not profile:
+        return HttpResponse("Profile not found")
+
+    breakfast = request.session.get("breakfast", "")
+    lunch = request.session.get("lunch", "")
+    dinner = request.session.get("dinner", "")
+
+    bmi = round(
+        profile.weight / ((profile.height / 100) ** 2),
+        1
+    )
+
+    response = HttpResponse(
+        content_type="application/pdf"
+    )
+
+    response["Content-Disposition"] = (
+        'attachment; filename="WellnessAI_Diet_Report.pdf"'
+    )
+
+    c = canvas.Canvas(response, pagesize=A4)
+
+    width, height = A4
+
+    # Colors
+    primary = HexColor("#2563EB")
+    secondary = HexColor("#10B981")
+    dark = HexColor("#0F172A")
+    light = HexColor("#F8FAFC")
+    white = HexColor("#FFFFFF")
+
+    # ================= HEADER =================
+
     c.setFillColor(primary)
-    c.drawString(50, y, "Client Profile")
-    y -= 18
+    c.rect(0, height - 110, width, 110, fill=1, stroke=0)
 
-    c.setFont("Helvetica", 11)
-    c.setFillColor(dark)
-    c.drawString(50, y, f"Name: {request.user.username}")
-    y -= 15
+    c.setFillColor(white)
 
-    if profile:
-        c.drawString(50, y, f"Goal: {profile.get_goal_display()}")
-        y -= 15
-        c.drawString(50, y, f"Age: {profile.age} | Height: {profile.height} cm | Weight: {profile.weight} kg")
-        y -= 15
+    c.setFont("Helvetica-Bold", 28)
+    c.drawCentredString(
+        width / 2,
+        height - 55,
+        "WELLNESSAI"
+    )
 
-    y -= 20
-    c.line(50, y, width - 50, y)
-    y -= 30
-    # ================= NUTRITION SUMMARY BOX =================
-    box_top = y
-    box_height = 90
+    c.setFont("Helvetica", 12)
+    c.drawCentredString(
+        width / 2,
+        height - 80,
+        "AI-Powered Personalized Nutrition Report"
+    )
 
-    c.setStrokeColor(primary)
-    c.setLineWidth(1.5)
-    c.rect(50, box_top - box_height, width - 100, box_height)
+    # ================= PROFILE CARD =================
 
-    c.setFont("Helvetica-Bold", 14)
-    c.setFillColor(primary)
-    c.drawString(60, box_top - 25, "Daily Nutrition Summary")
+    y = height - 150
 
-    c.setFont("Helvetica", 11)
-    c.setFillColor(dark)
-    c.drawString(60, box_top - 45, f"Estimated Calories : {calories} kcal")
-    c.drawString(60, box_top - 60, f"Protein            : {protein} g")
-    c.drawString(60, box_top - 75, f"Fats               : {fats} g")
+    c.setFillColor(light)
 
-    y = box_top - box_height - 30
-    # ================= DIET PLAN =================
-    c.setFont("Helvetica-Bold", 15)
-    c.setFillColor(primary)
-    c.drawString(50, y, "Daily Meal Plan")
-    y -= 25
+    c.roundRect(
+        40,
+        y - 130,
+        width - 80,
+        120,
+        15,
+        fill=1,
+        stroke=0
+    )
 
-    c.setFont("Helvetica", 11)
     c.setFillColor(dark)
 
-    for line in diet_plan.split("\n"):
-        if y < 80:
-            c.showPage()
-            y = height - 60
-            c.setFont("Helvetica", 11)
-
-        clean_line = line.strip()
-
-        # Section titles
-        if clean_line.lower().startswith(("breakfast", "lunch", "dinner", "snack")):
-            y -= 10
-            c.setFont("Helvetica-Bold", 13)
-            c.setFillColor(primary)
-            c.drawString(50, y, clean_line.replace(":", ""))
-            y -= 18
-            c.setFont("Helvetica", 11)
-            c.setFillColor(dark)
-
-        elif clean_line:
-            c.drawString(65, y, "• " + clean_line)
-            y -= 15
-        else:
-            y -= 8
-    
-    # ================= NOTES =================
-    y -= 20
-    c.line(50, y, width - 50, y)
-    y -= 25
-
-    c.setFont("Helvetica-Bold", 13)
-    c.setFillColor(primary)
-    c.drawString(50, y, "Nutritionist Notes")
-    y -= 18
-
-    c.setFont("Helvetica", 11)
-    c.setFillColor(dark)
+    c.setFont("Helvetica-Bold", 16)
     c.drawString(
-        50,
+        55,
+        y - 25,
+        "USER PROFILE"
+    )
+
+    c.setFont("Helvetica", 11)
+
+    c.drawString(
+        60,
+        y - 50,
+        f"Name: {request.user.username}"
+    )
+
+    c.drawString(
+        300,
+        y - 50,
+        f"Age: {profile.age} Years"
+    )
+
+    c.drawString(
+        60,
+        y - 75,
+        f"Height: {profile.height} cm"
+    )
+
+    c.drawString(
+        300,
+        y - 75,
+        f"Weight: {profile.weight} kg"
+    )
+
+    c.drawString(
+        60,
+        y - 100,
+        f"BMI: {bmi}"
+    )
+
+    c.drawString(
+        300,
+        y - 100,
+        f"Goal: {profile.get_goal_display()}"
+    )
+
+    # ================= DIET SECTION =================
+
+    y = height - 340
+
+    c.setFillColor(primary)
+
+    c.setFont("Helvetica-Bold", 18)
+    c.drawString(
+        45,
         y,
-        "Follow this plan consistently, stay hydrated, and adjust portions based on your activity level."
+        "PERSONALIZED DIET PLAN"
+    )
+
+    y -= 25
+
+    meals = [
+        ("BREAKFAST", breakfast),
+        ("LUNCH", lunch),
+        ("DINNER", dinner)
+    ]
+
+    for title, meal in meals:
+
+        c.setFillColor(white)
+
+        c.roundRect(
+            40,
+            y - 75,
+            width - 80,
+            65,
+            12,
+            fill=1,
+            stroke=1
+        )
+
+        c.setFillColor(primary)
+
+        c.setFont("Helvetica-Bold", 13)
+        c.drawString(
+            60,
+            y - 28,
+            title
+        )
+
+        c.setFillColor(dark)
+
+        c.setFont("Helvetica", 11)
+        c.drawString(
+            60,
+            y - 50,
+            meal
+        )
+
+        y -= 90
+
+    # ================= AI INSIGHT =================
+
+    c.setFillColor(light)
+
+    c.roundRect(
+        40,
+        y - 120,
+        width - 80,
+        110,
+        15,
+        fill=1,
+        stroke=0
+    )
+
+    c.setFillColor(secondary)
+
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(
+        55,
+        y - 30,
+        "AI HEALTH INSIGHT"
+    )
+
+    c.setFillColor(dark)
+
+    c.setFont("Helvetica", 11)
+
+    c.drawString(
+        60,
+        y - 55,
+        "✓ Maintain a consistent meal schedule"
+    )
+
+    c.drawString(
+        60,
+        y - 75,
+        "✓ Drink 2.5 - 3 liters of water daily"
+    )
+
+    c.drawString(
+        60,
+        y - 95,
+        "✓ Prioritize protein-rich foods"
+    )
+
+    c.drawString(
+        60,
+        y - 115,
+        "✓ Exercise regularly for best results"
     )
 
     # ================= FOOTER =================
-    c.setFont("Helvetica-Oblique", 9)
-    c.setFillColor(muted)
-    c.drawString(
-        50,
+
+    c.setStrokeColor(primary)
+
+    c.line(
         40,
-        "Disclaimer: This plan is AI-generated for educational purposes and does not replace professional medical advice."
+        70,
+        width - 40,
+        70
     )
 
-    c.showPage()
+    c.setFillColor(dark)
+
+    c.setFont("Helvetica", 9)
+
+    c.drawCentredString(
+        width / 2,
+        50,
+        "Generated by WellnessAI"
+    )
+
+    c.drawCentredString(
+        width / 2,
+        35,
+        "https://wellness-ai-okbb.onrender.com"
+    )
+
+    c.drawCentredString(
+        width / 2,
+        20,
+        f"Generated on {datetime.now().strftime('%d %B %Y')}"
+    )
+
     c.save()
+
     return response
